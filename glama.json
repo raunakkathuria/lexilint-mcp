@@ -1,0 +1,9 @@
+{
+  "$schema": "https://glama.ai/schemas/glama.json",
+  "name": "LexiLint MCP",
+  "description": "Offline spell check and BYOK grammar checking for AI assistants. 100% offline spell check via nspell (zero tokens). BYOK grammar with Gemini, OpenAI, or Claude.",
+  "homepage": "https://igniteapp.net/lexilint/mcp-spell-checker-claude-desktop",
+  "license": "MIT",
+  "categories": ["developer-tools"],
+  "tags": ["spell-check", "grammar", "privacy", "offline", "byok", "writing", "productivity"]
+}
