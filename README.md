@@ -64,6 +64,21 @@ Grammar checking uses your own API key (BYOK). Pass `provider` and `api_key`
 when the client calls `grammar_check` or `check_text`. Gemini is free; OpenAI,
 Anthropic, and non-English languages require a LexiLint Premium `license_key`.
 
+For example, ask your MCP client to call `grammar_check` with this input:
+
+```json
+{
+  "text": "This are a test.",
+  "provider": "gemini",
+  "api_key": "your-gemini-api-key",
+  "language": "en-US"
+}
+```
+
+Get a free Gemini API key from [Google AI Studio](https://aistudio.google.com).
+The same fields work with `check_text`. Add `license_key` when using a premium
+provider or language.
+
 Customers provide only their AI-provider key and, for premium features, their
 LexiLint licence key. No LexiLint signing secret or organisation configuration
 is required.
