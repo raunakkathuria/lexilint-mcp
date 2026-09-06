@@ -60,26 +60,13 @@ The spell check runs locally — no tokens consumed.
 
 ## Grammar Check Setup
 
-Grammar checking uses your own API key (BYOK):
+Grammar checking uses your own API key (BYOK). Pass `provider` and `api_key`
+when the client calls `grammar_check` or `check_text`. Gemini is free; OpenAI,
+Anthropic, and non-English languages require a LexiLint Premium `license_key`.
 
-1. Get a free [Google Gemini API key](https://aistudio.google.com)
-2. Set the environment variable:
-
-```json
-{
-  "mcpServers": {
-    "lexilint": {
-      "command": "npx",
-      "args": ["-y", "lexilint-mcp"],
-      "env": {
-        "GEMINI_API_KEY": "your-key-here"
-      }
-    }
-  }
-}
-```
-
-Supported providers: `GEMINI_API_KEY`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`
+Customers provide only their AI-provider key and, for premium features, their
+LexiLint licence key. No LexiLint signing secret or organisation configuration
+is required.
 
 ## Links
 
@@ -90,4 +77,6 @@ Supported providers: `GEMINI_API_KEY`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`
 
 ## License
 
-MIT
+LexiLint MCP is proprietary software. The public repository contains registry
+metadata only; the source code and standalone prompt are not published. See
+[`LICENSE`](LICENSE) for the runtime terms.
