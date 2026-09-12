@@ -2,109 +2,158 @@
 
 Spell and grammar checking for AI assistants via [Model Context Protocol (MCP)](https://modelcontextprotocol.io/).
 
-Works with **Claude Desktop**, **Cursor**, **ChatGPT**, and any MCP-compatible tool.
+Works with **Claude Desktop**, **Cursor**, **ChatGPT**, and other MCP-compatible clients.
 
 [![npm version](https://badge.fury.io/js/lexilint-mcp.svg)](https://www.npmjs.com/package/lexilint-mcp)
 [![MCP Registry](https://img.shields.io/badge/MCP-Registry-blue)](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.raunakkathuria/lexilint)
 
 ## Features
 
-- 🔒 **100% offline spell check** — uses nspell with local dictionaries. Zero tokens consumed. Zero API calls. Works without internet.
-- 🤖 **BYOK grammar check** — bring your own Gemini (free tier), OpenAI, or Claude API key. Your text goes directly to your chosen provider.
-- 💰 **Zero token cost for spell check** — stop wasting AI tokens on typo detection
-- 🌍 **8 languages** — English (US/UK), Spanish, French, German, Polish, Russian, Turkish
-- ⚡ **Instant results** — no latency, no rate limits, unlimited usage
+- **Offline spell checking** — en-US and en-GB are free, local, unlimited, and make no API calls.
+- **BYOK grammar checking** — use Gemini, OpenAI, or Anthropic with your own provider key.
+- **Eight supported dictionaries** — two free English variants plus six Premium languages: Spanish, French, German, Polish, Russian, and Turkish.
+- **Combined checking** — run spelling and optional grammar together with `check_text`.
+- **Private provider transport** — grammar text goes directly to the selected provider; LexiLint does not proxy it.
 
-## Installation
+## Install and configure
 
-### Claude Desktop / Cursor / ChatGPT
+### Claude Desktop and other JSON-configured clients
 
-Add to your MCP config:
+Configure one provider key as an environment variable. This keeps the key out of tool calls and conversation context.
 
 ```json
 {
   "mcpServers": {
     "lexilint": {
       "command": "npx",
-      "args": ["-y", "lexilint-mcp"]
+      "args": ["-y", "lexilint-mcp"],
+      "env": {
+        "GEMINI_API_KEY": "your-gemini-api-key"
+      }
     }
   }
 }
 ```
 
-### npm
+Provider environment variables:
+
+| Provider argument | Environment variable | Access |
+|---|---|---|
+| `gemini` | `GEMINI_API_KEY` | Free for English grammar |
+| `openai` | `OPENAI_API_KEY` | LexiLint Premium |
+| `anthropic` | `ANTHROPIC_API_KEY` | LexiLint Premium |
+
+Common Claude Desktop config locations:
+
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+
+Restart the client after changing its MCP configuration.
+
+### Run directly
 
 ```bash
-npm install -g lexilint-mcp
+npx -y lexilint-mcp
 ```
 
-## Usage
+You can also install it globally with `npm install -g lexilint-mcp`.
 
-Once installed, your AI assistant can use these tools:
+## Tools
 
-- `spell_check` — check text for spelling errors (100% offline)
-- `grammar_check` — check text for grammar issues (requires API key)
+### `spell_check` — free and offline
 
-### Example
+Checks spelling without an API key or network request.
 
-> "Use the spell_check tool to check this text: 'Ths is a tset'"
+```text
+text      string   Text to spell-check
+language  string   "en-US" or "en-GB" (default: "en-US")
+```
 
-The spell check runs locally — no tokens consumed.
+### `grammar_check` — BYOK grammar, style, and clarity
 
-## Token Cost Comparison
+```text
+text        string   Text to grammar-check
+provider    string   "gemini" | "openai" | "anthropic"
+api_key     string   Optional per-call override for the provider environment variable
+model       string   Optional provider model ID (Premium when custom)
+license_key string   LexiLint licence key for Premium providers/languages/models
+language    string   Language code (default: "en-US")
+```
 
-| Method | Cost per 500-word check |
-|--------|------------------------|
-| Ask AI directly ("fix typos in this") | ~$0.02 (GPT-4) / ~$0.015 (Claude) |
-| **LexiLint MCP spell_check** | **$0.00** |
-
-## Grammar Check Setup
-
-Grammar checking uses your own API key (BYOK). Pass `provider` and `api_key`
-when the client calls `grammar_check` or `check_text`. You can also pass an
-optional provider `model`; omit it to use the LexiLint default. Gemini is free;
-OpenAI, Anthropic, custom models, and non-English languages require a LexiLint
-Premium `license_key`.
-
-For example, ask your MCP client to call `grammar_check` with this input:
+With `GEMINI_API_KEY` configured, a client can call the tool without putting the provider key in its arguments:
 
 ```json
 {
   "text": "This are a test.",
   "provider": "gemini",
-  "api_key": "your-gemini-api-key",
   "language": "en-US"
 }
 ```
 
-Get a free Gemini API key from [Google AI Studio](https://aistudio.google.com).
-The same fields work with `check_text`. Add `license_key` when using a premium
-provider, language, or custom model. Current defaults are `gemini-3.8-flash`,
-`gpt-5.6-terra`, and `claude-sonnet-5`.
-
-To use another model without waiting for a LexiLint release, add the model and
-your Premium licence key to the tool input:
+A non-empty per-call `api_key` remains supported as an explicit override and takes precedence over the selected provider environment variable:
 
 ```json
 {
+  "text": "This are a test.",
+  "provider": "gemini",
+  "api_key": "temporary-override-key",
+  "language": "en-US"
+}
+```
+
+Get a free Gemini key from [Google AI Studio](https://aistudio.google.com). Do not paste real keys into chat messages; prefer your MCP client's local environment configuration.
+
+### `check_text` — combined spelling and optional grammar
+
+Always runs the available spelling check. Add `provider` to request grammar; omit it to skip grammar without requiring a provider key.
+
+```text
+text        string   Text to check
+language    string   Language code (default: "en-US")
+provider    string   Optional; omit to skip grammar
+api_key     string   Optional per-call override for the provider environment variable
+model       string   Optional provider model ID (Premium when custom)
+license_key string   LexiLint licence key for Premium providers/languages/models
+```
+
+## Models and Premium access
+
+Default models are `gemini-3.8-flash`, `gpt-5.6-terra`, and `claude-sonnet-5`. A custom model requires LexiLint Premium:
+
+```json
+{
+  "text": "This are a test.",
+  "provider": "gemini",
   "model": "gemini-3.7-flash",
   "license_key": "your-lexilint-license-key"
 }
 ```
 
-Customers provide only their AI-provider key and, for premium features, their
-LexiLint licence key. No LexiLint signing secret or organisation configuration
-is required.
+| Feature | Free | Premium ($2.99/mo or $29.99 lifetime) |
+|---|---|---|
+| Spell check | en-US and en-GB, offline | Plus es, fr, de, pl, ru, tr |
+| Gemini grammar | English, BYOK | All supported languages and custom models |
+| OpenAI grammar | — | BYOK |
+| Anthropic grammar | — | BYOK |
+
+Get Premium: https://igniteapp.net/lexilint#premium
+
+Customers provide only their provider key and, for Premium features, their LexiLint licence key. The runtime already contains the public application configuration needed to validate a licence with Polar; customers do not configure a LexiLint signing secret or organisation ID.
+
+## Privacy and repository boundary
+
+- Spell checking is local and sends no text anywhere.
+- Grammar text goes directly to Google, OpenAI, or Anthropic according to the provider you select.
+- LexiLint does not receive provider keys or grammar text.
+- The public `raunakkathuria/lexilint-mcp` repository is a metadata-only registry mirror containing exactly `LICENSE`, `README.md`, `glama.json`, and `server.json`. Private source, builds, tests, source maps, and standalone prompt documentation are not published there.
 
 ## Links
 
-- 📦 [npm package](https://www.npmjs.com/package/lexilint-mcp)
-- 🌐 [Website & docs](https://igniteapp.net/lexilint/mcp-spell-checker-claude-desktop)
-- 🧩 [Chrome Extension](https://igniteapp.net/lexilint/)
-- 📋 [MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.raunakkathuria/lexilint)
+- [npm package](https://www.npmjs.com/package/lexilint-mcp)
+- [Website and docs](https://igniteapp.net/lexilint/mcp-spell-checker-claude-desktop)
+- [Chrome Extension](https://igniteapp.net/lexilint/)
+- [MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.raunakkathuria/lexilint)
 
-## License
+## Licence
 
-LexiLint MCP is proprietary software. The public repository contains registry
-metadata only; the source code and standalone prompt are not published. See
-[`LICENSE`](LICENSE) for the runtime terms.
+LexiLint MCP is proprietary software distributed under the terms in [`LICENSE`](LICENSE). Installing the package does not open-source the private monorepo or grant redistribution rights.

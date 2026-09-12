@@ -15,7 +15,26 @@
       "transport": {
         "type": "stdio"
       },
-      "environmentVariables": []
+      "environmentVariables": [
+        {
+          "name": "GEMINI_API_KEY",
+          "description": "Google Gemini API key for grammar checking; optional when api_key is supplied per call.",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "OPENAI_API_KEY",
+          "description": "OpenAI API key for Premium grammar checking; optional when api_key is supplied per call.",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "ANTHROPIC_API_KEY",
+          "description": "Anthropic API key for Premium grammar checking; optional when api_key is supplied per call.",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
     }
   ]
 }
