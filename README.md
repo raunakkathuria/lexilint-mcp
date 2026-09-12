@@ -80,7 +80,7 @@ For example, ask your MCP client to call `grammar_check` with this input:
 Get a free Gemini API key from [Google AI Studio](https://aistudio.google.com).
 The same fields work with `check_text`. Add `license_key` when using a premium
 provider, language, or custom model. Current defaults are `gemini-3.8-flash`,
-`gpt-5.6-luna`, and `claude-sonnet-5`.
+`gpt-5.6-terra`, and `claude-sonnet-5`.
 
 To use another model without waiting for a LexiLint release, add the model and
 your Premium licence key to the tool input:
