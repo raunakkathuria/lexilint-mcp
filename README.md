@@ -61,8 +61,10 @@ The spell check runs locally — no tokens consumed.
 ## Grammar Check Setup
 
 Grammar checking uses your own API key (BYOK). Pass `provider` and `api_key`
-when the client calls `grammar_check` or `check_text`. Gemini is free; OpenAI,
-Anthropic, and non-English languages require a LexiLint Premium `license_key`.
+when the client calls `grammar_check` or `check_text`. You can also pass an
+optional provider `model`; omit it to use the LexiLint default. Gemini is free;
+OpenAI, Anthropic, custom models, and non-English languages require a LexiLint
+Premium `license_key`.
 
 For example, ask your MCP client to call `grammar_check` with this input:
 
@@ -77,7 +79,18 @@ For example, ask your MCP client to call `grammar_check` with this input:
 
 Get a free Gemini API key from [Google AI Studio](https://aistudio.google.com).
 The same fields work with `check_text`. Add `license_key` when using a premium
-provider or language.
+provider, language, or custom model. Current defaults are `gemini-3.8-flash`,
+`gpt-5.6-terra`, and `claude-sonnet-5`.
+
+To use another model without waiting for a LexiLint release, add the model and
+your Premium licence key to the tool input:
+
+```json
+{
+  "model": "gemini-3.7-flash",
+  "license_key": "your-lexilint-license-key"
+}
+```
 
 Customers provide only their AI-provider key and, for premium features, their
 LexiLint licence key. No LexiLint signing secret or organisation configuration
