@@ -103,6 +103,10 @@ A non-empty per-call `api_key` remains supported as an explicit override and tak
 
 Get a free Gemini key from [Google AI Studio](https://aistudio.google.com). Do not paste real keys into chat messages; prefer your MCP client's local environment configuration.
 
+If the provider's reply is empty or cannot be read, the tool returns an error instead of reporting that no issues were found.
+
+Grammar checks at most 2,000 characters per call. Longer text is cut at the last paragraph, sentence, or word that fits, and the result says how many characters were checked. Send the rest in separate calls.
+
 ### `check_text` — combined spelling and optional grammar
 
 Always runs the available spelling check. Add `provider` to request grammar; omit it to skip grammar without requiring a provider key.
