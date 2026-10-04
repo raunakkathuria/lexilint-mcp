@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.raunakkathuria/lexilint",
-  "description": "Offline spell checker + BYOK grammar for AI assistants. Works with Claude Desktop, ChatGPT, Cursor.",
+  "description": "Offline spell checker + BYOK grammar for Claude Desktop, Cursor, Codex and other local MCP clients.",
   "repository": {
     "url": "https://github.com/raunakkathuria/lexilint-mcp",
     "source": "github"

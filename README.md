@@ -2,7 +2,7 @@
 
 Spell and grammar checking for AI assistants via [Model Context Protocol (MCP)](https://modelcontextprotocol.io/).
 
-Works with **Claude Desktop**, **Cursor**, **ChatGPT**, and other MCP-compatible clients.
+Works with **Claude Desktop**, **Cursor**, **OpenAI Codex** (CLI, IDE extension and ChatGPT desktop app), and other MCP clients that run local (stdio) servers. ChatGPT chat connects only to remote MCP servers, so it cannot run LexiLint MCP.
 
 [![npm version](https://badge.fury.io/js/lexilint-mcp.svg)](https://www.npmjs.com/package/lexilint-mcp)
 [![MCP Registry](https://img.shields.io/badge/MCP-Registry-blue)](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.raunakkathuria/lexilint)
